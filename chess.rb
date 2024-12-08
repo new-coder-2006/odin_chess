@@ -8,8 +8,8 @@ class Chess
     @board = Array.new(8) { Array.new(8, nil) }
     @black_king = King.new(0, 2, "black")
     @white_king = King.new(7, 2, "white")
-    @board[0][3] = @black_king
-    @board[7][3] = @white_king
+    @board[0][4] = @black_king
+    @board[7][4] = @white_king
   end
 
   def render_cell(row, col)

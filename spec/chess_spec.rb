@@ -8,14 +8,14 @@ describe Chess do
   describe "#print_board" do
     it "prints initial setup" do
       expect { test_game.print_board }.to output(
-        "|_|_|_|" + "K".colorize(:black) + "|_|_|_|_|\n" +
+        "|_|_|_|_|" + "K".colorize(:black) + "|_|_|_|\n" +
         "|_|_|_|_|_|_|_|_|\n" +
         "|_|_|_|_|_|_|_|_|\n" +
         "|_|_|_|_|_|_|_|_|\n" +
         "|_|_|_|_|_|_|_|_|\n" +
         "|_|_|_|_|_|_|_|_|\n" +
         "|_|_|_|_|_|_|_|_|\n" +
-        "|_|_|_|" + "K".colorize(:white) + "|_|_|_|_|\n"
+        "|_|_|_|_|" + "K".colorize(:white) + "|_|_|_|\n"
       ).to_stdout
     end
 
@@ -63,7 +63,7 @@ describe Chess do
     context "when user first tries to move piece that is not their color then tries to move piece that is their color" do
       before do
         allow(test_game).to receive(:get_from_row).and_return(0, 7)
-        allow(test_game).to receive(:get_from_col).and_return(3, 3)
+        allow(test_game).to receive(:get_from_col).and_return(3, 4)
         allow(test_game).to receive(:print_board).twice
       end
 
@@ -74,14 +74,14 @@ describe Chess do
       end
 
       it "returns an array containing the piece to move along with its row and column numbers" do
-        expect(test_game.get_piece_to_move("white")).to include(test_game.board[7][3], 7, 3)
+        expect(test_game.get_piece_to_move("white")).to include(test_game.board[7][4], 7, 4)
       end
     end
 
     context "when user specifies an empty space" do
       before do
         allow(test_game).to receive(:get_from_row).and_return(0, 7)
-        allow(test_game).to receive(:get_from_col).and_return(0, 3)
+        allow(test_game).to receive(:get_from_col).and_return(0, 4)
         allow(test_game).to receive(:print_board).twice
       end
 
@@ -103,7 +103,7 @@ describe Chess do
       it "prints an error message" do
         expect(test_game).to receive(:puts).with("You can't move to that space. Please enter a valid space to move " +
            "this piece to.").once
-        test_game.move_piece(test_game.board[0][3])
+        test_game.move_piece(test_game.board[0][4])
       end
     end
   end
