@@ -5,44 +5,50 @@ class Bishop < Piece
     super(row, col, color)
   end
 
-  def possible_next_spaces(board)
+  def possible_moves(board)
     possible = []
+
     (1..7).each do |i|
-      if i == 1
-        possible << [@row + i, @col + i] if 
-          (@row + i) < 8 && 
-          (@col + i) < 8 && 
-          board[@row + i][@col + i].nil? 
-        possible << [@row - i, @col - i] if 
-          (@row - i) >= 0 && 
-          (@col - i) >= 0 &&
-          board[@row - i][@col - i].nil?
-        possible << [@row + i, @col - i] if 
-          (@row + i) < 8 && 
-          (@col - i) >= 0 &&
-          board[@row + i][@col - i].nil?
-        possible << [@row - i, @col + i] if 
-          (@row - i) >= 0 && 
-          (@col + i) < 8 &&
-          board[@row - i][@col + i].nil?
-      else
-        possible << [@row + i, @col + i] if 
-          (@row + i) < 8 && 
-          (@col + i) < 8 && 
-          board[@row + i - 1][@col + i - 1].nil?
-        possible << [@row - i, @col - i] if 
-          (@row - i) >= 0 && 
-          (@col - i) >= 0 &&
-          board[@row - i][@col - i].nil?
-        possible << [@row + i, @col - i] if 
-          (@row + i) < 8 && 
-          (@col - i) >= 0 &&
-          board[@row + i][@col - i].nil?
-        possible << [@row - i, @col + i] if 
-          (@row - i) >= 0 && 
-          (@col + i) < 8 &&
-          board[@row - i][@col + i].nil?
+      break if (@row + i) > 7 || (@col + i) > 7
+      break if board[@row + i][@col + i].is_a?(Piece) &&
+               board[@row + i][@col + i].color == @color
+      possible << [@row + i, @col + i]
+      break unless board[@row + i][@col + i].nil?
+    end
+
+    (1..7).each do |i|
+      break if (@row - i) < 0 || (@col - i) < 0
+      break if board[@row - i][@col - i].is_a?(Piece) &&
+               board[@row - i][@col - i].color == @color
+      possible << [@row - i, @col - i]
+      break unless board[@row - i][@col - i].nil?
+    end
+
+    (1..7).each do |i|
+      break if (@row + i) > 7 || (@col - i) < 0
+      break if board[@row + i][@col - i].is_a?(Piece) &&
+               board[@row + i][@col - i].color == @color
+      possible << [@row + i, @col - i]
+      break unless board[@row + i][@col - i].nil?
+    end
+
+    (1..7).each do |i|
+      break if (@row - i) < 0 || (@col + i) > 7
+      break if board[@row - i][@col + i].is_a?(Piece) &&
+               board[@row - i][@col + i].color == @color
+      possible << [@row - i, @col + i]
+      break unless board[@row - i][@col + i].nil?
     end
 
     possible
   end
+
+  def move(new_row, new_col, board)
+    return false unless self.possible_moves(board).include?([new_row, new_col])
+    
+    @row = new_row
+    @col = new_col
+
+    true
+  end
+end

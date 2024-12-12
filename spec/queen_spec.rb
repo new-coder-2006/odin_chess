@@ -71,7 +71,7 @@ describe Queen do
         expect(white_queen.possible_moves(test_board)).to include([6, 3])
       end
 
-      it "does not include space where the opponent's piece is located" do
+      it "does not include spaces beyond where the opponent's piece is located" do
         expect(white_queen.possible_moves(test_board)).not_to include([7, 3])
       end
     end
