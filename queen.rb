@@ -9,67 +9,63 @@ class Queen < Piece
     possible = []
 
     ((@row + 1)...8).each do |i|
-      break if @board[@row + i][@col].is_a?(Piece) && 
-               @board[@row + i][@col].color == @color
-      possible << [@row + i][@col]
-      break unless @board[@row + i][@col].nil?
+      break if board[i][@col].is_a?(Piece) && 
+               board[i][@col].color == @color
+      possible << [i, @col]
+      break unless board[i][@col].nil?
     end
 
     (1..(@row)).each do |i|
-      break if @board[@row - i][@col].is_a?(Piece) && 
-               @board[@row - i][@col].color == @color
-      possible << [@row - i][@col]
-      break unless @board[@row - i][@col].nil?
+      break if board[@row - i][@col].is_a?(Piece) && 
+               board[@row - i][@col].color == @color
+      possible << [@row - i, @col]
+      break unless board[@row - i][@col].nil?
     end
 
     ((@col + 1)...8).each do |i|
-      break if @board[@row][@col + i].is_a?(Piece) && 
-               @board[@row][@col + i].color == @color
-      possible << [@row][@col + i]
-      break unless @board[@row][@col + i].nil?
+      break if board[@row][i].is_a?(Piece) && 
+               board[@row][i].color == @color
+      possible << [@row, i]
+      break unless board[@row][i].nil?
     end
 
     (1..(@col)).each do |i|
-      break if @board[@row][@col - i].is_a?(Piece) && 
-               @board[@row][@col - i].color == @color
-      possible << [@row][@col - i]
-      break unless @board[@row][@col - i].nil?
+      break if board[@row][@col - i].is_a?(Piece) && 
+               board[@row][@col - i].color == @color
+      possible << [@row, @col - i]
+      break unless board[@row][@col - i].nil?
     end
 
-    ((@row + 1)...8).each do |i|
-      ((@col + 1)...8).each do |j|
-        break if @board[row + i][@col + j].is_a?(Piece) && 
-                 @board[row + i][@col + j].color == @color
-        possible << [@row + i][@col + j]
-        break unless @board[@row + i][@col + j].nil?
-      end
+    (1..7).each do |i|
+      break if (@row + i) > 7 || (@col + i) > 7
+      break if board[@row + i][@col + i].is_a?(Piece) &&
+               board[@row + i][@col + i].color == @color
+      possible << [@row + i, @col + i]
+      break unless board[@row + i][@col + i].nil?
     end
 
-    ((@row + 1)...8).each do |i|
-      (1..(@col)).each do |j|
-        break if @board[row + i][@col - j].is_a?(Piece) && 
-                 @board[row + i][@col - j].color == @color
-        possible << [@row + i][@col - j]
-        break unless @board[@row + i][@col - j].nil?
-      end
+    (1..7).each do |i|
+      break if (@row - i) < 0 || (@col - i) < 0
+      break if board[@row - i][@col - i].is_a?(Piece) &&
+               board[@row - i][@col - i].color == @color
+      possible << [@row - i, @col - i]
+      break unless board[@row - i][@col - i].nil?
     end
 
-    (1..(@row)).each do |i|
-      (1..(@col)).each do |j|
-        break if @board[row - i][@col - j].is_a?(Piece) && 
-                 @board[row - i][@col - j].color == @color
-        possible << [@row - i][@col - j]
-        break unless @board[@row - i][@col - j].nil?
-      end
+    (1..7).each do |i|
+      break if (@row + i) > 7 || (@col - i) < 0
+      break if board[@row + i][@col - i].is_a?(Piece) &&
+               board[@row + i][@col - i].color == @color
+      possible << [@row + i, @col - i]
+      break unless board[@row + i][@col - i].nil?
     end
 
-    (1..(@row)).each do |i|
-      ((@col + 1)...8).each do |j|
-        break if @board[row - i][@col + j].is_a?(Piece) && 
-                 @board[row - i][@col + j].color == @color
-        possible << [@row - i][@col + j]
-        break unless @board[@row - i][@col + j].nil?
-      end
+    (1..7).each do |i|
+      break if (@row - i) < 0 || (@col + i) > 7
+      break if board[@row - i][@col + i].is_a?(Piece) &&
+               board[@row - i][@col + i].color == @color
+      possible << [@row - i, @col + i]
+      break unless board[@row - i][@col + i].nil?
     end
 
     possible
