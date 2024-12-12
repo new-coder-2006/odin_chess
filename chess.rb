@@ -1,6 +1,7 @@
 require "colorize"
 require_relative "king"
 require_relative "queen"
+require_relative "bishop"
 
 class Chess
   attr_accessor :board
@@ -9,12 +10,20 @@ class Chess
     @board = Array.new(8) { Array.new(8, nil) }
     @black_king = King.new(0, 4, "black")
     @black_queen = Queen.new(0, 3, "black")
+    @black_bishop_left = Bishop.new(0, 2, "black")
+    @black_bishop_right = Bishop.new(0, 5, "black")
     @white_king = King.new(7, 4, "white")
     @white_queen = Queen.new(7, 3, "white")
+    @white_bishop_left = Bishop.new(7, 2, "white")
+    @white_bishop_right = Bishop.new(7, 5, "white")
     @board[0][4] = @black_king
     @board[0][3] = @black_queen
+    @board[0][2] = @black_bishop_left
+    @board[0][5] = @black_bishop_right
     @board[7][4] = @white_king
     @board[7][3] = @white_queen
+    @board[7][2] = @white_bishop_left
+    @board[7][5] = @white_bishop_right
   end
 
   def render_cell(row, col)
@@ -26,11 +35,17 @@ class Chess
     print "Q".colorize(:white) if 
       space_contents.is_a?(Queen) && 
       space_contents.color == "white"
+    print "B".colorize(:white) if 
+      space_contents.is_a?(Bishop) && 
+      space_contents.color == "white"
     print "K".colorize(:black) if 
       space_contents.is_a?(King) && 
       space_contents.color == "black"
     print "Q".colorize(:black) if 
       space_contents.is_a?(Queen) && 
+      space_contents.color == "black"
+    print "B".colorize(:black) if 
+      space_contents.is_a?(Bishop) && 
       space_contents.color == "black"
   end
 
@@ -136,17 +151,20 @@ class Chess
 
   def game
     turn = "white"
-    puts "It's #{turn}'s turn!"
 
     until winner?
+      puts "It's #{turn}'s turn!"
       print_board
       move_entered = false
 
       until move_entered
         piece_to_move, from_row, from_col = get_piece_to_move(turn)
         dest_row, dest_col = [get_to_row, get_to_col]
+        turn_king = turn == "white" ? @white_king : @black_king
 
-        if piece_to_move.move(dest_row, dest_col, @board)
+        if !piece_to_move.is_a?(King) && turn_king.check?(turn_king.row, turn_king.col, @board)
+          puts "Your king is in check. You must move your king on this turn."
+        elsif piece_to_move.move(dest_row, dest_col, @board)
           move_entered = true
           update_board(from_row, from_col, dest_row, dest_col)
         else
