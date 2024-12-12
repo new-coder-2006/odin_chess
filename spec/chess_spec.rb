@@ -8,14 +8,14 @@ describe Chess do
   describe "#print_board" do
     it "prints initial setup" do
       expect { test_game.print_board }.to output(
-        "|_|_|_|_|" + "K".colorize(:black) + "|_|_|_|\n" +
+        "|_|_|_|" + "Q".colorize(:black) + "|" + "K".colorize(:black) + "|_|_|_|\n" +
         "|_|_|_|_|_|_|_|_|\n" +
         "|_|_|_|_|_|_|_|_|\n" +
         "|_|_|_|_|_|_|_|_|\n" +
         "|_|_|_|_|_|_|_|_|\n" +
         "|_|_|_|_|_|_|_|_|\n" +
         "|_|_|_|_|_|_|_|_|\n" +
-        "|_|_|_|_|" + "K".colorize(:white) + "|_|_|_|\n"
+        "|_|_|_|" + "Q".colorize(:white) + "|" + "K".colorize(:white) + "|_|_|_|\n"
       ).to_stdout
     end
 
@@ -97,13 +97,40 @@ describe Chess do
     context "when user tries to move to an invalid space" do
       before do
         allow(test_game).to receive(:get_to_row).and_return(6, 1)
-        allow(test_game).to receive(:get_to_col).and_return(3, 3)
+        allow(test_game).to receive(:get_to_col).and_return(3, 4)
       end
 
       it "prints an error message" do
         expect(test_game).to receive(:puts).with("You can't move to that space. Please enter a valid space to move " +
            "this piece to.").once
         test_game.move_piece(test_game.board[0][4])
+      end
+    end
+
+    context "when user tries to move to a valid space" do
+      before do
+        allow(test_game).to receive(:get_to_row).and_return(1)
+        allow(test_game).to receive(:get_to_col).and_return(4)
+        test_game.move_piece(test_game.board[0][4])
+      end
+
+      it "updates user piece's row and column" do
+        expect(test_game.board[0][4].row).to eq(1)
+        expect(test_game.board[0][4].col).to eq(4)
+      end
+    end
+
+    context "when user executes a legal capture" do
+      before do
+        test_game.board[1][4] = Queen.new(1, 4, "white")
+        allow(test_game).to receive(:get_to_row).and_return(1)
+        allow(test_game).to receive(:get_to_col).and_return(4)
+        test_game.move_piece(test_game.board[0][4])
+      end
+
+      it "updates user piece's row and column" do
+        expect(test_game.board[0][4].row).to eq(1)
+        expect(test_game.board[0][4].col).to eq(4)
       end
     end
   end

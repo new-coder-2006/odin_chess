@@ -1,15 +1,20 @@
 require "colorize"
 require_relative "king"
+require_relative "queen"
 
 class Chess
   attr_accessor :board
   # Black is at top of board (array rows 0 and 1), White at bottom (rows 6 and 7)
   def initialize
     @board = Array.new(8) { Array.new(8, nil) }
-    @black_king = King.new(0, 2, "black")
-    @white_king = King.new(7, 2, "white")
+    @black_king = King.new(0, 4, "black")
+    @black_queen = Queen.new(0, 3, "black")
+    @white_king = King.new(7, 4, "white")
+    @white_queen = Queen.new(7, 3, "white")
     @board[0][4] = @black_king
+    @board[0][3] = @black_queen
     @board[7][4] = @white_king
+    @board[7][3] = @white_queen
   end
 
   def render_cell(row, col)
@@ -18,8 +23,14 @@ class Chess
     print "K".colorize(:white) if 
       space_contents.is_a?(King) && 
       space_contents.color == "white"
+    print "Q".colorize(:white) if 
+      space_contents.is_a?(Queen) && 
+      space_contents.color == "white"
     print "K".colorize(:black) if 
       space_contents.is_a?(King) && 
+      space_contents.color == "black"
+    print "Q".colorize(:black) if 
+      space_contents.is_a?(Queen) && 
       space_contents.color == "black"
   end
 
