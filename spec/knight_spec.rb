@@ -11,6 +11,8 @@ describe Knight do
   subject(:black_bishop) { Bishop.new(6, 3, "black") }
   subject(:white_king) { King.new(3, 4, "white") }
   subject(:black_king) { King.new(2, 4, "black")}
+  subject(:black_knight2) { Knight.new(7, 1, "black") }
+  subject(:black_knight3) { Knight.new(7, 6, "black") }
 
   describe "#possible_moves" do
     let(:test_board) { Array.new(8) { Array.new(8, nil) } }
@@ -18,6 +20,8 @@ describe Knight do
     context "when no other pieces on the board" do
       before do
         test_board[4][4] = black_knight
+        test_board[7][1] = black_knight2
+        test_board[7][6] = black_knight3
       end
 
       it "includes all spaces in the surrounding L-shapes" do
@@ -32,6 +36,8 @@ describe Knight do
 
       it "does not include spaces outside of the surrounding L-shapes" do
         expect(black_knight.possible_moves(test_board)).not_to include([4, 5], [0, 0], [3, 3])
+        expect(black_knight2.possible_moves(test_board)).not_to include([1, 4])
+        expect(black_knight3.possible_moves(test_board)).not_to include([1, 4])
       end
     end
 

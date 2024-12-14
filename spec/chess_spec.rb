@@ -8,14 +8,14 @@ describe Chess do
   describe "#print_board" do
     it "prints initial setup" do
       expect { test_game.print_board }.to output(
-        "|_|_|" + "B".colorize(:black) + "|" + "Q".colorize(:black) + "|" + "K".colorize(:black) + "|" + "B".colorize(:black) + "|_|_|\n" +
+        "|_|" + "N".colorize(:black) + "|" + "B".colorize(:black) + "|" + "Q".colorize(:black) + "|" + "K".colorize(:black) + "|" + "B".colorize(:black) + "|" + "N".colorize(:black) + "|_|\n" +
         "|_|_|_|_|_|_|_|_|\n" +
         "|_|_|_|_|_|_|_|_|\n" +
         "|_|_|_|_|_|_|_|_|\n" +
         "|_|_|_|_|_|_|_|_|\n" +
         "|_|_|_|_|_|_|_|_|\n" +
         "|_|_|_|_|_|_|_|_|\n" +
-        "|_|_|" + "B".colorize(:white) + "|" +"Q".colorize(:white) + "|" + "K".colorize(:white) + "|" + "B".colorize(:white) + "|_|_|\n"
+        "|_|" + "N".colorize(:white) + "|" + "B".colorize(:white) + "|" +"Q".colorize(:white) + "|" + "K".colorize(:white) + "|" + "B".colorize(:white) + "|" + "N".colorize(:white) + "|_|\n"
       ).to_stdout
     end
 

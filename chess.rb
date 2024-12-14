@@ -2,6 +2,7 @@ require "colorize"
 require_relative "king"
 require_relative "queen"
 require_relative "bishop"
+require_relative "knight"
 
 class Chess
   attr_accessor :board
@@ -12,18 +13,26 @@ class Chess
     @black_queen = Queen.new(0, 3, "black")
     @black_bishop_left = Bishop.new(0, 2, "black")
     @black_bishop_right = Bishop.new(0, 5, "black")
+    @black_knight_left = Knight.new(0, 1, "black")
+    @black_knight_right = Knight.new(0, 6, "black")
     @white_king = King.new(7, 4, "white")
     @white_queen = Queen.new(7, 3, "white")
     @white_bishop_left = Bishop.new(7, 2, "white")
     @white_bishop_right = Bishop.new(7, 5, "white")
+    @white_knight_left = Knight.new(7, 1, "white")
+    @white_knight_right = Knight.new(7, 6, "white")
     @board[0][4] = @black_king
     @board[0][3] = @black_queen
     @board[0][2] = @black_bishop_left
     @board[0][5] = @black_bishop_right
+    @board[0][1] = @black_knight_left
+    @board[0][6] = @black_knight_right
     @board[7][4] = @white_king
     @board[7][3] = @white_queen
     @board[7][2] = @white_bishop_left
     @board[7][5] = @white_bishop_right
+    @board[7][1] = @white_knight_left
+    @board[7][6] = @white_knight_right
   end
 
   def render_cell(row, col)
@@ -38,6 +47,9 @@ class Chess
     print "B".colorize(:white) if 
       space_contents.is_a?(Bishop) && 
       space_contents.color == "white"
+    print "N".colorize(:white) if 
+      space_contents.is_a?(Knight) && 
+      space_contents.color == "white"
     print "K".colorize(:black) if 
       space_contents.is_a?(King) && 
       space_contents.color == "black"
@@ -46,6 +58,9 @@ class Chess
       space_contents.color == "black"
     print "B".colorize(:black) if 
       space_contents.is_a?(Bishop) && 
+      space_contents.color == "black"
+    print "N".colorize(:black) if 
+      space_contents.is_a?(Knight) && 
       space_contents.color == "black"
   end
 

@@ -8,62 +8,62 @@ class Knight < Piece
   def possible_moves(board)
     possible = []
 
-    possible << [row + 2, col + 1] unless 
-      (
-        board[row + 2][col + 1].is_a?(Piece) && 
-        board[row + 2][col + 1].color == @color
-      ) || 
-      (row + 2) > 8 || 
-      (col + 1) > 8
-    possible << [row - 2, col - 1] unless 
-      (
-        board[row - 2][col - 1].is_a?(Piece) && 
-        board[row - 2][col - 1].color == @color
-      ) || 
-      (row - 2) < 0 || 
-      (col - 1) < 0
-    possible << [row + 2, col - 1] unless 
-      (
-        board[row + 2][col - 1].is_a?(Piece) && 
-        board[row + 2][col - 1].color == @color
-      ) || 
-      (row + 2) > 8 || 
-      (col - 1) < 0
-    possible << [row - 2, col + 1] unless 
-      (
-        board[row - 2][col + 1].is_a?(Piece) && 
-        board[row - 2][col + 1].color == @color
-      ) || 
-      (row - 2) < 0 || 
-      (col + 1) > 8
-    possible << [row + 1, col + 2] unless 
-      (
-        board[row + 1][col + 2].is_a?(Piece) && 
-        board[row + 1][col + 2].color == @color
-      ) || 
-      (row + 1) > 8 || 
-      (col + 2) > 8
-    possible << [row - 1, col - 2] unless 
-      (
-        board[row - 1][col - 2].is_a?(Piece) && 
-        board[row - 1][col - 2].color == @color
-      ) || 
-      (row - 1) < 0 || 
-      (col - 2) < 0
-    possible << [row + 1, col - 2] unless 
-      (
-        board[row + 1][col - 2].is_a?(Piece) && 
-        board[row + 1][col - 2].color == @color
-      ) || 
-      (row + 1) > 8 || 
-      (col - 2) < 0
-    possible << [row - 1, col + 2] unless 
-      (
-        board[row - 1][col + 2].is_a?(Piece) && 
-        board[row - 1][col + 2].color == @color
-      ) || 
-      (row - 1) < 0 || 
-      (col + 2) > 8
+    if (@row + 2).between?(0,7) && (@col + 1).between?(0,7)
+      possible << [@row + 2, @col + 1] unless 
+        (
+          board[@row + 2][@col + 1].is_a?(Piece) && 
+          board[@row + 2][@col + 1].color == @color
+        )
+    end
+    if (@row - 2).between?(0,7) && (@col - 1).between?(0,7)
+      possible << [@row - 2, @col - 1] unless 
+        (
+          board[@row - 2][@col - 1].is_a?(Piece) && 
+          board[@row - 2][@col - 1].color == @color
+        )
+    end
+    if (@row + 2).between?(0,7) && (@col - 1).between?(0,7)
+      possible << [@row + 2, @col - 1] unless 
+        (
+          board[@row + 2][@col - 1].is_a?(Piece) && 
+          board[@row + 2][@col - 1].color == @color
+        )
+    end
+    if (@row - 2).between?(0,7) && (@col + 1).between?(0,7)
+      possible << [@row - 2, @col + 1] unless 
+        (
+          board[@row - 2][@col + 1].is_a?(Piece) && 
+          board[@row - 2][@col + 1].color == @color
+        )
+    end
+    if (@row + 1).between?(0,7) && (@col + 2).between?(0,7)
+      possible << [@row + 1, @col + 2] unless 
+        (
+          board[@row + 1][@col + 2].is_a?(Piece) && 
+          board[@row + 1][@col + 2].color == @color
+        )
+    end
+    if (@row - 1).between?(0,7) && (@col - 2).between?(0,7)
+      possible << [@row - 1, @col - 2] unless 
+        (
+          board[@row - 1][@col - 2].is_a?(Piece) && 
+          board[@row - 1][@col - 2].color == @color
+        )
+    end
+    if (@row + 1).between?(0,7) && (@col - 2).between?(0,7)
+      possible << [@row + 1, @col - 2] unless 
+        (
+          board[@row + 1][@col - 2].is_a?(Piece) && 
+          board[@row + 1][@col - 2].color == @color
+        )
+    end
+    if (@row - 1).between?(0,7) && (@col + 2).between?(0,7)
+      possible << [@row - 1, @col + 2] unless 
+        (
+          board[@row - 1][@col + 2].is_a?(Piece) && 
+          board[@row - 1][@col + 2].color == @color
+        )
+    end
 
     possible
   end
