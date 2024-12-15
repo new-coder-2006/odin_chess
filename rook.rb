@@ -3,6 +3,7 @@ require_relative "piece"
 class Rook < Piece
   def initialize(row, col, color)
     super(row, col, color)
+    @times_moved = 0
   end
 
   def possible_moves(board)
@@ -39,11 +40,16 @@ class Rook < Piece
     possible
   end
 
+  def can_castle?
+    @times_moved == 0
+  end
+
   def move(new_row, new_col, board)
     return false unless self.possible_moves(board).include?([new_row, new_col])
     
     @row = new_row
     @col = new_col
+    @times_moved += 1
 
     true
   end

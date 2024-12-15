@@ -3,6 +3,7 @@ require_relative "piece"
 class King < Piece
   def initialize(row, col, color)
     super(row, col, color)
+    @times_moved = 0
   end
 
   def possible_moves(board)
@@ -38,12 +39,32 @@ class King < Piece
     self.possible_moves(board).all? { |row, col| check?(row, col, board) }
   end
 
+  def can_castle?(rook, board)
+    return false if @times_moved > 0
+    return false if check?(@row, @col, board)
+
+    if rook == "left" do
+      (1..3).each do |i|
+        return false unless board[@row][i].nil?
+        return false if check?(@row, i, board)
+      end
+    elsif rook == "right" do
+      (5..7).each do |i|
+        return false unless board[@row][i].nil?
+        return false if check?(@row, i, board)
+      end
+    end
+
+    true
+  end
+
   def move(new_row, new_col, board)
     return false unless self.possible_moves(board).include?([new_row, new_col])
     return false if check?(new_row, new_col, board)
     
     @row = new_row
     @col = new_col
+    @times_moved += 1
 
     true
   end
