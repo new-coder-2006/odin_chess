@@ -1,6 +1,8 @@
 require_relative "piece"
 
 class King < Piece
+  attr_accessor :times_moved
+
   def initialize(row, col, color)
     super(row, col, color)
     @times_moved = 0
@@ -43,13 +45,13 @@ class King < Piece
     return false if @times_moved > 0
     return false if check?(@row, @col, board)
 
-    if rook == "left" do
+    if rook == "left" 
       (1..3).each do |i|
         return false unless board[@row][i].nil?
         return false if check?(@row, i, board)
       end
-    elsif rook == "right" do
-      (5..7).each do |i|
+    elsif rook == "right" 
+      (5..6).each do |i|
         return false unless board[@row][i].nil?
         return false if check?(@row, i, board)
       end

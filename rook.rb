@@ -40,7 +40,13 @@ class Rook < Piece
     possible
   end
 
-  def can_castle?
+  def can_castle?(rook, board)
+    if rook == "left"
+      return false unless board[0][3].nil?
+    else
+      return false unless board[0][5].nil?
+    end
+    
     @times_moved == 0
   end
 

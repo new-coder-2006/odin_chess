@@ -1,9 +1,19 @@
 require_relative "../piece"
 require_relative "../king"
+require_relative "../rook"
+require_relative "../queen"
+
+
 
 describe King do
   subject(:white_king) { King.new(0, 3, "white") }
   subject(:black_king) { King.new(7, 3, "black") }
+  subject(:white_rook_left) { Rook.new(0, 0, "white") }
+  subject(:black_queen) { Queen.new(1, 4, "black") }
+  subject(:white_queen) { Queen.new(0, 2, "white") }
+  subject(:white_rook_right) { Rook.new(0, 7, "white") }
+  subject(:black_rook) { Rook.new(7, 2, "black") }
+  subject(:black_rook2) { Rook.new(7, 6, "black") }
 
   describe "#possible_moves" do
     let(:test_board) { Array.new(8) { Array.new(8, nil) } }
@@ -84,6 +94,11 @@ describe King do
     it "returns true if move is legal" do
       expect(white_king.move(0, 2, test_board)).to be(true)
     end
+
+    it "updates the number of times moved" do
+      white_king.move(0, 2, test_board)
+      expect(white_king.times_moved).to eq(1)
+    end
   end
 
   describe "#checkmate?" do
@@ -93,6 +108,54 @@ describe King do
       test_board[0][3] = white_king
       test_board[0][4] = King.new(0, 4, "black")
       expect(white_king.checkmate?(test_board)).to be(false)
+    end
+  end
+
+  describe "#can_castle?" do
+    let(:test_board) { Array.new(8) { Array.new(8, nil) } }
+
+    before do
+      test_board[0][4] = white_king
+      test_board[0][0] = white_rook_left
+      test_board[0][7] = white_rook_right
+    end
+
+    it "returns false if king has moved" do
+      white_king.times_moved = 1
+      expect(white_king.can_castle?("left", test_board)).to be(false)
+    end
+
+    it "returns false if king is in check" do
+      test_board[1][4] = black_queen
+      expect(white_king.can_castle?("left", test_board)).to be(false)
+    end
+
+    it "returns false if castling with left rook would move king through checked space" do
+      test_board[7][2] = black_rook
+      expect(white_king.can_castle?("left", test_board)).to be(false)
+    end
+
+    it "returns false if castling with right rook would move king through checked space" do
+      test_board[7][6] = black_rook2
+      expect(white_king.can_castle?("right", test_board)).to be(false)
+    end
+
+    it "returns false if castling with left rook and spaces in between not empty" do
+      test_board[0][2] = white_queen
+      expect(white_king.can_castle?("left", test_board)).to be(false)
+    end
+
+    it "returns false if castling with left rook and spaces in between not empty" do
+      test_board[0][5] = white_queen
+      expect(white_king.can_castle?("right", test_board)).to be(false)
+    end
+
+    it "returns true if castling with left rook and spaces in bt empty and no issues with check" do
+      expect(white_king.can_castle?("left", test_board)).to be(true)
+    end
+    
+    it "returns true if castling with right rook and spaces in bt empty and no issues with check" do
+      expect(white_king.can_castle?("right", test_board)).to be(true)
     end
   end
 end

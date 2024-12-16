@@ -70,7 +70,6 @@ class Knight < Piece
 
   def move(new_row, new_col, board)
     return false unless self.possible_moves(board).include?([new_row, new_col])
-    return false if check?(new_row, new_col, board)
     
     @row = new_row
     @col = new_col

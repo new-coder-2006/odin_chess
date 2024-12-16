@@ -98,14 +98,61 @@ class Chess
     false
   end
 
+  def handle_castle(turn)
+    puts "Please enter either left or right to identify the Rook you want to castle."
+    side = gets.chomp
+    return handle_castle(turn) unless side.downcase == "left" || side.downcase == "right"
+
+    rook = nil
+    king = nil
+    row = nil
+
+    if turn == "black"
+      king = @black_king
+      row = 0
+      if side.downcase == "left"
+        rook = @black_rook_left
+      else
+        rook = @black_rook_right
+      end
+    else
+      king = @white_king
+      row = 7
+      if side.downcase == "left"
+        rook = @white_rook_left
+      else
+        rook = @white_rook_right
+      end
+    end
+
+    return false unless king.can_castle?(side.downcase, @board) && rook.can_castle?(side.downcase, @board)
+
+    if side.downcase == "left"
+      king.move(row, 2, @board)
+      update_board(row, 4, row, 2)
+      rook.move(row, 3, @board)
+      update_board(row, 0, row, 3)
+    else
+      king.move(row, 6, @board)
+      update_board(row, 4, row, 6)
+      rook.move(row, 5, @board)
+      update_board(row, 7, row, 5)
+    end
+
+    true
+  end
+
   def get_row
-    row = gets.chomp.to_i
-    unless row.between?(1, 8)
+    row = gets.chomp
+    return row.downcase if row.downcase == "castle"
+
+    row_as_int = row.to_i
+    unless row_as_int.between?(1, 8)
       puts "Please enter a valid row number."
       return get_row
     end
     # Subtract 1 to support zero-indexing
-    row - 1
+    row_as_int - 1
   end
   
   def get_col
@@ -121,7 +168,7 @@ class Chess
 
   def get_from_row
     puts "Please enter a number between 1 and 8 for the row of the piece you " +
-         "would like to move."
+         "would like to move, or type 'castle' if you would like to castle."
     
     get_row
   end
@@ -148,7 +195,16 @@ class Chess
   end
 
   def get_piece_to_move(turn)
-    from_row, from_col = [get_from_row, get_from_col]
+    from_row = get_from_row
+
+    if from_row == "castle"
+      unless handle_castle(turn)
+        puts "Cannot castle on that side"
+        return get_piece_to_move(turn)
+      end
+      return [nil, "castled", nil]
+    end
+    from_col = get_from_col
     piece_to_move = @board[from_row][from_col]
 
     if piece_to_move.nil? || piece_to_move.color != turn
@@ -189,18 +245,23 @@ class Chess
 
       until move_entered
         piece_to_move, from_row, from_col = get_piece_to_move(turn)
-        dest_row, dest_col = [get_to_row, get_to_col]
-        turn_king = turn == "white" ? @white_king : @black_king
+        
+        unless from_row == "castled"
+          dest_row, dest_col = [get_to_row, get_to_col]
+          turn_king = turn == "white" ? @white_king : @black_king
 
-        if !piece_to_move.is_a?(King) && turn_king.check?(turn_king.row, turn_king.col, @board)
-          puts "Your king is in check. You must move your king on this turn."
-        elsif piece_to_move.move(dest_row, dest_col, @board)
-          move_entered = true
-          update_board(from_row, from_col, dest_row, dest_col)
-        else
-          puts "The coordinates you entered are invalid. Please enter a valid " + 
-               "space to move this piece to."
+          if !piece_to_move.is_a?(King) && turn_king.check?(turn_king.row, turn_king.col, @board)
+            puts "Your king is in check. You must move your king on this turn."
+          elsif piece_to_move.move(dest_row, dest_col, @board)
+            move_entered = true
+            update_board(from_row, from_col, dest_row, dest_col)
+          else
+            puts "The coordinates you entered are invalid. Please enter a valid " + 
+                  "space to move this piece to."
+          end
         end
+
+        move_entered = true if from_row == "castled"
       end
 
       turn = turn == "white" ? "black" : "white"
@@ -211,5 +272,5 @@ class Chess
   end
 end
 
-#test_game = Chess.new
-#test_game.game
+test_game = Chess.new
+test_game.game
