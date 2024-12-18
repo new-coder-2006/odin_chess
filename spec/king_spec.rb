@@ -3,8 +3,6 @@ require_relative "../king"
 require_relative "../rook"
 require_relative "../queen"
 
-
-
 describe King do
   subject(:white_king) { King.new(0, 3, "white") }
   subject(:black_king) { King.new(7, 3, "black") }
