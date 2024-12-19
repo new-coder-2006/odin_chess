@@ -4,6 +4,8 @@ require_relative "queen"
 require_relative "bishop"
 require_relative "knight"
 require_relative "rook"
+require_relative "pawn"
+
 
 class Chess
   attr_accessor :board
@@ -18,6 +20,14 @@ class Chess
     @black_knight_right = Knight.new(0, 6, "black")
     @black_rook_left = Rook.new(0, 0, "black")
     @black_rook_right = Rook.new(0, 7, "black")
+    @black_pawn1 = Pawn.new(1, 0, "black")
+    @black_pawn2 = Pawn.new(1, 1, "black")
+    @black_pawn3 = Pawn.new(1, 2, "black")
+    @black_pawn4 = Pawn.new(1, 3, "black")
+    @black_pawn5 = Pawn.new(1, 4, "black")
+    @black_pawn6 = Pawn.new(1, 5, "black")
+    @black_pawn7 = Pawn.new(1, 6, "black")
+    @black_pawn8 = Pawn.new(1, 7, "black")
     @white_king = King.new(7, 4, "white")
     @white_queen = Queen.new(7, 3, "white")
     @white_bishop_left = Bishop.new(7, 2, "white")
@@ -26,6 +36,14 @@ class Chess
     @white_knight_right = Knight.new(7, 6, "white")
     @white_rook_left = Rook.new(7, 0, "white")
     @white_rook_right = Rook.new(7, 7, "white")
+    @white_pawn1 = Pawn.new(6, 0, "white")
+    @white_pawn2 = Pawn.new(6, 1, "white")
+    @white_pawn3 = Pawn.new(6, 2, "white")
+    @white_pawn4 = Pawn.new(6, 3, "white")
+    @white_pawn5 = Pawn.new(6, 4, "white")
+    @white_pawn6 = Pawn.new(6, 5, "white")
+    @white_pawn7 = Pawn.new(6, 6, "white")
+    @white_pawn8 = Pawn.new(6, 7, "white")
     @board[0][4] = @black_king
     @board[0][3] = @black_queen
     @board[0][2] = @black_bishop_left
@@ -34,6 +52,14 @@ class Chess
     @board[0][6] = @black_knight_right
     @board[0][0] = @black_rook_left
     @board[0][7] = @black_rook_right
+    @board[1][0] = @black_pawn1
+    @board[1][1] = @black_pawn2
+    @board[1][2] = @black_pawn3
+    @board[1][3] = @black_pawn4
+    @board[1][4] = @black_pawn5
+    @board[1][5] = @black_pawn6
+    @board[1][6] = @black_pawn7
+    @board[1][7] = @black_pawn8
     @board[7][4] = @white_king
     @board[7][3] = @white_queen
     @board[7][2] = @white_bishop_left
@@ -42,6 +68,14 @@ class Chess
     @board[7][6] = @white_knight_right
     @board[7][0] = @white_rook_left
     @board[7][7] = @white_rook_right
+    @board[6][0] = @white_pawn1
+    @board[6][1] = @white_pawn2
+    @board[6][2] = @white_pawn3
+    @board[6][3] = @white_pawn4
+    @board[6][4] = @white_pawn5
+    @board[6][5] = @white_pawn6
+    @board[6][6] = @white_pawn7
+    @board[6][7] = @white_pawn8
   end
 
   def render_cell(row, col)
@@ -62,6 +96,9 @@ class Chess
     print "R".colorize(:white) if 
       space_contents.is_a?(Rook) && 
       space_contents.color == "white"
+    print "P".colorize(:white) if 
+      space_contents.is_a?(Pawn) && 
+      space_contents.color == "white"
     print "K".colorize(:black) if 
       space_contents.is_a?(King) && 
       space_contents.color == "black"
@@ -76,6 +113,9 @@ class Chess
       space_contents.color == "black"
     print "R".colorize(:black) if 
       space_contents.is_a?(Rook) && 
+      space_contents.color == "black"
+    print "P".colorize(:black) if 
+      space_contents.is_a?(Pawn) && 
       space_contents.color == "black"
   end
 
@@ -235,6 +275,33 @@ class Chess
     @board[to_row][to_col] = temp 
   end
 
+  def handle_promotion(dest_row, dest_col, color)
+    promotion_choices = ["rook", "bishop", "queen", "knight"]
+
+    puts "Please specify what rank you want to promote the pawn to: rook, " + 
+         "bishop, queen, or knight."
+
+    promotion_rank = gets.chomp.downcase
+
+    unless promotion_choices.include?(promotion_rank)
+      return handle_promotion(dest_row, dest_col)
+    end
+
+    if promotion_rank == "rook"
+      times_moved_temp = @board[dest_row][dest_col].times_moved
+      @board[dest_row][dest_col] = Rook.new(dest_row, dest_col, color)
+      @board[dest_row][dest_col].times_moved = times_moved_temp
+    elsif promotion_rank == "queen"
+      @board[dest_row][dest_col] = Queen.new(dest_row, dest_col, color)
+    elsif promotion_rank == "bishop"
+      @board[dest_row][dest_col] = Bishop.new(dest_row, dest_col, color)
+    elsif promotion_rank == "knight"
+      @board[dest_row][dest_col] = Knight.new(dest_row, dest_col, color)
+    end
+
+    nil
+  end
+
   def game
     turn = "white"
 
@@ -255,6 +322,8 @@ class Chess
           elsif piece_to_move.move(dest_row, dest_col, @board)
             move_entered = true
             update_board(from_row, from_col, dest_row, dest_col)
+            handle_promotion(dest_row, dest_col, turn) if piece_to_move.is_a?(Pawn) && 
+              ((turn == "white" && dest_row == 0) || (turn == "black" && dest_row == 7))
           else
             puts "The coordinates you entered are invalid. Please enter a valid " + 
                   "space to move this piece to."

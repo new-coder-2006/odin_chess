@@ -1,6 +1,8 @@
 require_relative "piece"
 
 class Rook < Piece
+  attr_accessor :times_moved
+  
   def initialize(row, col, color)
     super(row, col, color)
     @times_moved = 0
@@ -46,7 +48,7 @@ class Rook < Piece
     else
       return false unless board[0][5].nil?
     end
-    
+
     @times_moved == 0
   end
 

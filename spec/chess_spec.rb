@@ -9,12 +9,12 @@ describe Chess do
     it "prints initial setup" do
       expect { test_game.print_board }.to output(
         "|" + "R".colorize(:black) + "|" + "N".colorize(:black) + "|" + "B".colorize(:black) + "|" + "Q".colorize(:black) + "|" + "K".colorize(:black) + "|" + "B".colorize(:black) + "|" + "N".colorize(:black) + "|" + "R".colorize(:black) + "|\n" +
+        "|" + (("P".colorize(:black) + "|") * 8) + "\n" +
         "|_|_|_|_|_|_|_|_|\n" +
         "|_|_|_|_|_|_|_|_|\n" +
         "|_|_|_|_|_|_|_|_|\n" +
         "|_|_|_|_|_|_|_|_|\n" +
-        "|_|_|_|_|_|_|_|_|\n" +
-        "|_|_|_|_|_|_|_|_|\n" +
+        "|" + (("P".colorize(:white) + "|") * 8) + "\n" +
         "|" + "R".colorize(:white) + "|" + "N".colorize(:white) + "|" + "B".colorize(:white) + "|" +"Q".colorize(:white) + "|" + "K".colorize(:white) + "|" + "B".colorize(:white) + "|" + "N".colorize(:white) + "|" + "R".colorize(:white) + "|\n"
       ).to_stdout
     end

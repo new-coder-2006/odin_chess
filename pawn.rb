@@ -1,7 +1,7 @@
 require_relative "piece"
 
 class Pawn < Piece
-  attr_accessor :en_passant_eligible
+  attr_accessor :en_passant_eligible, :times_moved
 
   def initialize(row, col, color, times_moved = 0)
     super(row, col, color)
