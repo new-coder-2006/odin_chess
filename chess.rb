@@ -28,6 +28,10 @@ class Chess
     @black_pawn6 = Pawn.new(1, 5, "black")
     @black_pawn7 = Pawn.new(1, 6, "black")
     @black_pawn8 = Pawn.new(1, 7, "black")
+    @black_pawns = [
+      @black_pawn1, @black_pawn2, @black_pawn3, @black_pawn4,
+      @black_pawn5, @black_pawn6, @black_pawn7, @black_pawn8
+    ]
     @white_king = King.new(7, 4, "white")
     @white_queen = Queen.new(7, 3, "white")
     @white_bishop_left = Bishop.new(7, 2, "white")
@@ -44,6 +48,10 @@ class Chess
     @white_pawn6 = Pawn.new(6, 5, "white")
     @white_pawn7 = Pawn.new(6, 6, "white")
     @white_pawn8 = Pawn.new(6, 7, "white")
+    @white_pawns = [
+      @white_pawn1, @white_pawn2, @white_pawn3, @white_pawn4,
+      @white_pawn5, @white_pawn6, @white_pawn7, @white_pawn8
+    ]
     @board[0][4] = @black_king
     @board[0][3] = @black_queen
     @board[0][2] = @black_bishop_left
@@ -183,8 +191,8 @@ class Chess
   end
 
   def get_row
-    row = gets.chomp
-    return row.downcase if row.downcase == "castle"
+    row = gets.chomp.downcase
+    return row if row == "castle"
 
     row_as_int = row.to_i
     unless row_as_int.between?(1, 8)
@@ -208,7 +216,8 @@ class Chess
 
   def get_from_row
     puts "Please enter a number between 1 and 8 for the row of the piece you " +
-         "would like to move, or type 'castle' if you would like to castle."
+         "would like to move, type 'castle' if you would like to castle, or " +
+         "type 'en passant' if you would like to capture en passant."
     
     get_row
   end
@@ -239,11 +248,13 @@ class Chess
 
     if from_row == "castle"
       unless handle_castle(turn)
-        puts "Cannot castle on that side"
+        puts "Cannot castle on that side."
         return get_piece_to_move(turn)
       end
+
       return [nil, "castled", nil]
     end
+
     from_col = get_from_col
     piece_to_move = @board[from_row][from_col]
 
@@ -269,10 +280,18 @@ class Chess
     nil
   end
 
-  def update_board(from_row, from_col, to_row, to_col)
+  def update_board(from_row, from_col, to_row, to_col, piece)
     temp = @board[from_row][from_col]
     @board[from_row][from_col] = nil
-    @board[to_row][to_col] = temp 
+    @board[to_row][to_col] = temp
+    
+    if piece.is_a?(Pawn) && from_col != to_col
+      if @board[from_row][to_col].is_a?(Pawn) && 
+         @board[from_row][to_col].en_passant_eligible && 
+         @board[from_row][to_col].color != piece.color
+         @board[from_row][to_col] = nil 
+      end
+    end
   end
 
   def handle_promotion(dest_row, dest_col, color)
@@ -302,6 +321,16 @@ class Chess
     nil
   end
 
+  def reset_en_passant(turn)
+    pawns = turn == "white" ? @white_pawns : @black_pawns
+
+    pawns.each do |pawn|
+      pawn.en_passant_eligible = false
+    end
+
+    nil
+  end
+
   def game
     turn = "white"
 
@@ -309,11 +338,12 @@ class Chess
       puts "It's #{turn}'s turn!"
       print_board
       move_entered = false
+      reset_en_passant(turn)
 
       until move_entered
         piece_to_move, from_row, from_col = get_piece_to_move(turn)
         
-        unless from_row == "castled"
+        unless from_row == "castled" || from_row == "en passant"
           dest_row, dest_col = [get_to_row, get_to_col]
           turn_king = turn == "white" ? @white_king : @black_king
 
@@ -321,7 +351,7 @@ class Chess
             puts "Your king is in check. You must move your king on this turn."
           elsif piece_to_move.move(dest_row, dest_col, @board)
             move_entered = true
-            update_board(from_row, from_col, dest_row, dest_col)
+            update_board(from_row, from_col, dest_row, dest_col, piece_to_move)
             handle_promotion(dest_row, dest_col, turn) if piece_to_move.is_a?(Pawn) && 
               ((turn == "white" && dest_row == 0) || (turn == "black" && dest_row == 7))
           else
@@ -330,7 +360,7 @@ class Chess
           end
         end
 
-        move_entered = true if from_row == "castled"
+        move_entered = true if from_row == "castled" || from_row == "en passant"
       end
 
       turn = turn == "white" ? "black" : "white"

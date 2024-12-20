@@ -39,7 +39,7 @@ class King < Piece
 
   def checkmate?(board)
     self.possible_moves(board).all? { |row, col| check?(row, col, board) } || 
-    self.possible_moves(board).empty?
+    (self.possible_moves(board).empty? && self.check?(@row, @col, board))
   end
 
   def can_castle?(rook, board)
