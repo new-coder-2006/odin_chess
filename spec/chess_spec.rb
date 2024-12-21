@@ -96,27 +96,27 @@ describe Chess do
   describe "#move_piece" do
     context "when user tries to move to an invalid space" do
       before do
-        allow(test_game).to receive(:get_to_row).and_return(6, 1)
+        allow(test_game).to receive(:get_to_row).and_return(6, 2)
         allow(test_game).to receive(:get_to_col).and_return(3, 4)
       end
 
       it "prints an error message" do
         expect(test_game).to receive(:puts).with("You can't move to that space. Please enter a valid space to move " +
            "this piece to.").once
-        test_game.move_piece(test_game.board[0][4])
+        test_game.move_piece(test_game.board[1][4])
       end
     end
 
     context "when user tries to move to a valid space" do
       before do
-        allow(test_game).to receive(:get_to_row).and_return(1)
+        allow(test_game).to receive(:get_to_row).and_return(2)
         allow(test_game).to receive(:get_to_col).and_return(4)
-        test_game.move_piece(test_game.board[0][4])
+        test_game.move_piece(test_game.board[1][4])
       end
 
       it "updates user piece's row and column" do
-        expect(test_game.board[0][4].row).to eq(1)
-        expect(test_game.board[0][4].col).to eq(4)
+        expect(test_game.board[1][4].row).to eq(2)
+        expect(test_game.board[1][4].col).to eq(4)
       end
     end
 
@@ -138,13 +138,13 @@ describe Chess do
   describe "#update_board" do
     it "correctly moves the specified piece to the specified space" do
       piece = test_game.board[0][3]
-      test_game.update_board(0, 3, 1, 3)
+      test_game.update_board(0, 3, 1, 3, piece)
       expect(test_game.board[1][3]).to eq(piece)
     end
 
     it "space where the moved piece was previously located reverts to nil" do
       piece = test_game.board[0][3]
-      test_game.update_board(0, 3, 1, 3)
+      test_game.update_board(0, 3, 1, 3, piece)
       expect(test_game.board[0][3].nil?).to be(true)
     end
   end

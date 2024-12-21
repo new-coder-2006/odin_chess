@@ -54,7 +54,7 @@ class King < Piece
         )
     end
     if @row + 1 < 8 && @col - 1 >= 0
-      possible << [@row - 1, @col - 1] unless
+      possible << [@row + 1, @col - 1] unless
         (
           board[@row + 1][@col - 1].is_a?(Piece) && 
           board[@row + 1][@col - 1].color == @color

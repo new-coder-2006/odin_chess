@@ -177,14 +177,14 @@ class Chess
 
     if side.downcase == "left"
       king.move(row, 2, @board)
-      update_board(row, 4, row, 2)
+      update_board(row, 4, row, 2, king)
       rook.move(row, 3, @board)
-      update_board(row, 0, row, 3)
+      update_board(row, 0, row, 3, rook)
     else
       king.move(row, 6, @board)
-      update_board(row, 4, row, 6)
+      update_board(row, 4, row, 6, king)
       rook.move(row, 5, @board)
-      update_board(row, 7, row, 5)
+      update_board(row, 7, row, 5, rook)
     end
 
     true
@@ -370,5 +370,5 @@ class Chess
   end
 end
 
-test_game = Chess.new
-test_game.game
+#test_game = Chess.new
+#test_game.game
