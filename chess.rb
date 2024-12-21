@@ -139,9 +139,9 @@ class Chess
   end
 
   def winner?
-    return "black" if @black_king.checkmate?(@board)
+    return "white" if @black_king.checkmate?(@board)
 
-    return "white" if @white_king.checkmate?(@board)
+    return "black" if @white_king.checkmate?(@board)
 
     false
   end
@@ -216,8 +216,7 @@ class Chess
 
   def get_from_row
     puts "Please enter a number between 1 and 8 for the row of the piece you " +
-         "would like to move, type 'castle' if you would like to castle, or " +
-         "type 'en passant' if you would like to capture en passant."
+         "would like to move, type 'castle' if you would like to castle."
     
     get_row
   end
@@ -343,7 +342,7 @@ class Chess
       until move_entered
         piece_to_move, from_row, from_col = get_piece_to_move(turn)
         
-        unless from_row == "castled" || from_row == "en passant"
+        unless from_row == "castled"
           dest_row, dest_col = [get_to_row, get_to_col]
           turn_king = turn == "white" ? @white_king : @black_king
 
@@ -360,7 +359,7 @@ class Chess
           end
         end
 
-        move_entered = true if from_row == "castled" || from_row == "en passant"
+        move_entered = true if from_row == "castled"
       end
 
       turn = turn == "white" ? "black" : "white"

@@ -11,14 +11,62 @@ class King < Piece
   def possible_moves(board)
     possible = []
 
-    possible << [@row + 1, @col] if @row + 1 < 8
-    possible << [@row - 1, @col] if @row - 1 >= 0
-    possible << [@row, @col + 1] if @col + 1 < 8
-    possible << [@row, @col - 1] if @col - 1 >= 0
-    possible << [@row + 1, @col + 1] if @row + 1 < 8 && @col + 1 < 8
-    possible << [@row - 1, @col - 1] if @row - 1 >= 0 && @row - 1 >= 0
-    possible << [@row + 1, @col - 1] if @row + 1 < 8 && @col - 1 >= 0
-    possible << [@row - 1, @col + 1] if @row - 1 >= 0 && @col + 1 < 8
+    if @row + 1 < 8
+      possible << [@row + 1, @col] unless 
+        (
+          board[@row + 1][@col].is_a?(Piece) && 
+          board[@row + 1][@col].color == @color
+        )
+    end
+    if @row - 1 >= 0
+      possible << [@row - 1, @col] unless
+        (
+          board[@row - 1][@col].is_a?(Piece) && 
+          board[@row - 1][@col].color == @color
+        )
+    end
+    if @col + 1 < 8
+      possible << [@row, @col + 1] unless
+        (
+          board[@row][@col + 1].is_a?(Piece) && 
+          board[@row][@col + 1].color == @color
+        )
+    end
+    if @col - 1 >= 0
+      possible << [@row, @col - 1] unless
+        (
+          board[@row][@col - 1].is_a?(Piece) && 
+          board[@row][@col - 1].color == @color
+        )
+    end
+    if @row + 1 < 8 && @col + 1 < 8
+      possible << [@row + 1, @col + 1] unless
+        (
+          board[@row + 1][@col + 1].is_a?(Piece) && 
+          board[@row + 1][@col + 1].color == @color
+        )
+    end
+    if @row - 1 >= 0 && @col - 1 >= 0
+      possible << [@row - 1, @col - 1] unless
+        (
+          board[@row - 1][@col - 1].is_a?(Piece) && 
+          board[@row - 1][@col - 1].color == @color
+        )
+    end
+    if @row + 1 < 8 && @col - 1 >= 0
+      possible << [@row - 1, @col - 1] unless
+        (
+          board[@row + 1][@col - 1].is_a?(Piece) && 
+          board[@row + 1][@col - 1].color == @color
+        )
+    end
+    if @row - 1 >= 0 && @col + 1 < 8
+      possible << [@row - 1, @col + 1] unless
+        (
+          board[@row - 1][@col + 1].is_a?(Piece) && 
+          board[@row - 1][@col + 1].color == @color
+        )
+    end
 
     possible
   end
@@ -28,7 +76,7 @@ class King < Piece
       board_row.each do |space|
         unless space.nil?
           if space.color != @color
-            return space.possible_moves(board).include?([row, col])
+            return true if space.possible_moves(board).include?([row, col])
           end
         end
       end
@@ -38,8 +86,10 @@ class King < Piece
   end
 
   def checkmate?(board)
-    self.possible_moves(board).all? { |row, col| check?(row, col, board) } || 
-    (self.possible_moves(board).empty? && self.check?(@row, @col, board))
+    return (self.possible_moves(board).all? { |row, col| check?(row, col, board) }) unless
+      self.possible_moves(board).empty?
+    
+      self.possible_moves(board).empty? && self.check?(@row, @col, board)
   end
 
   def can_castle?(rook, board)
