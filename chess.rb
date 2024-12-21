@@ -6,85 +6,51 @@ require_relative "knight"
 require_relative "rook"
 require_relative "pawn"
 
-
 class Chess
   attr_accessor :board
   # Black is at top of board (array rows 0 and 1), White at bottom (rows 6 and 7)
   def initialize
     @board = Array.new(8) { Array.new(8, nil) }
-    @black_king = King.new(0, 4, "black")
-    @black_queen = Queen.new(0, 3, "black")
-    @black_bishop_left = Bishop.new(0, 2, "black")
-    @black_bishop_right = Bishop.new(0, 5, "black")
-    @black_knight_left = Knight.new(0, 1, "black")
-    @black_knight_right = Knight.new(0, 6, "black")
-    @black_rook_left = Rook.new(0, 0, "black")
-    @black_rook_right = Rook.new(0, 7, "black")
-    @black_pawn1 = Pawn.new(1, 0, "black")
-    @black_pawn2 = Pawn.new(1, 1, "black")
-    @black_pawn3 = Pawn.new(1, 2, "black")
-    @black_pawn4 = Pawn.new(1, 3, "black")
-    @black_pawn5 = Pawn.new(1, 4, "black")
-    @black_pawn6 = Pawn.new(1, 5, "black")
-    @black_pawn7 = Pawn.new(1, 6, "black")
-    @black_pawn8 = Pawn.new(1, 7, "black")
-    @black_pawns = [
-      @black_pawn1, @black_pawn2, @black_pawn3, @black_pawn4,
-      @black_pawn5, @black_pawn6, @black_pawn7, @black_pawn8
+    @first_row_pieces = [
+      "rook", 
+      "knight", 
+      "bishop", 
+      "queen", 
+      "king", 
+      "bishop", 
+      "knight", 
+      "rook"
     ]
-    @white_king = King.new(7, 4, "white")
-    @white_queen = Queen.new(7, 3, "white")
-    @white_bishop_left = Bishop.new(7, 2, "white")
-    @white_bishop_right = Bishop.new(7, 5, "white")
-    @white_knight_left = Knight.new(7, 1, "white")
-    @white_knight_right = Knight.new(7, 6, "white")
-    @white_rook_left = Rook.new(7, 0, "white")
-    @white_rook_right = Rook.new(7, 7, "white")
-    @white_pawn1 = Pawn.new(6, 0, "white")
-    @white_pawn2 = Pawn.new(6, 1, "white")
-    @white_pawn3 = Pawn.new(6, 2, "white")
-    @white_pawn4 = Pawn.new(6, 3, "white")
-    @white_pawn5 = Pawn.new(6, 4, "white")
-    @white_pawn6 = Pawn.new(6, 5, "white")
-    @white_pawn7 = Pawn.new(6, 6, "white")
-    @white_pawn8 = Pawn.new(6, 7, "white")
-    @white_pawns = [
-      @white_pawn1, @white_pawn2, @white_pawn3, @white_pawn4,
-      @white_pawn5, @white_pawn6, @white_pawn7, @white_pawn8
-    ]
-    @board[0][4] = @black_king
-    @board[0][3] = @black_queen
-    @board[0][2] = @black_bishop_left
-    @board[0][5] = @black_bishop_right
-    @board[0][1] = @black_knight_left
-    @board[0][6] = @black_knight_right
-    @board[0][0] = @black_rook_left
-    @board[0][7] = @black_rook_right
-    @board[1][0] = @black_pawn1
-    @board[1][1] = @black_pawn2
-    @board[1][2] = @black_pawn3
-    @board[1][3] = @black_pawn4
-    @board[1][4] = @black_pawn5
-    @board[1][5] = @black_pawn6
-    @board[1][6] = @black_pawn7
-    @board[1][7] = @black_pawn8
-    @board[7][4] = @white_king
-    @board[7][3] = @white_queen
-    @board[7][2] = @white_bishop_left
-    @board[7][5] = @white_bishop_right
-    @board[7][1] = @white_knight_left
-    @board[7][6] = @white_knight_right
-    @board[7][0] = @white_rook_left
-    @board[7][7] = @white_rook_right
-    @board[6][0] = @white_pawn1
-    @board[6][1] = @white_pawn2
-    @board[6][2] = @white_pawn3
-    @board[6][3] = @white_pawn4
-    @board[6][4] = @white_pawn5
-    @board[6][5] = @white_pawn6
-    @board[6][6] = @white_pawn7
-    @board[6][7] = @white_pawn8
+
+    @black_pawns = []
+    @white_pawns = []
+
+    (0..7).each do |i|
+      @board[0][i] = create_piece(@first_row_pieces[i], 0, i, "black")
+      @board[1][i] = create_piece("pawn", 1, i, "black")
+      @black_pawns << @board[1][i]
+      @board[7][i] = create_piece(@first_row_pieces[i], 7, i, "white")
+      @board[6][i] = create_piece("pawn", 6, i, "white")
+      @white_pawns << @board[6][i]
+    end
+
+    @black_king = @board[0][4]
+    @white_king = @board[7][4]
   end
+
+  def create_piece(type, row, col, color)
+    piece_hash = {
+      "king" => King, 
+      "queen" => Queen, 
+      "bishop" => Bishop,
+      "knight" => Knight,
+      "rook" => Rook,
+      "pawn" => Pawn
+    }
+
+    piece_hash[type].new(row, col, color)
+  end
+
 
   def render_cell(row, col)
     space_contents = @board[row][col]
@@ -283,7 +249,7 @@ class Chess
     temp = @board[from_row][from_col]
     @board[from_row][from_col] = nil
     @board[to_row][to_col] = temp
-    
+    # Handle en passant
     if piece.is_a?(Pawn) && from_col != to_col
       if @board[from_row][to_col].is_a?(Pawn) && 
          @board[from_row][to_col].en_passant_eligible && 
@@ -370,5 +336,5 @@ class Chess
   end
 end
 
-#test_game = Chess.new
-#test_game.game
+test_game = Chess.new
+test_game.game
