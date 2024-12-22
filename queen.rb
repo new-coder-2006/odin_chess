@@ -1,8 +1,11 @@
 require_relative "piece"
 
 class Queen < Piece
+  attr_accessor :symbol
+  
   def initialize(row, col, color)
     super(row, col, color)
+    @symbol = "Q"
   end
 
   def possible_moves(board)

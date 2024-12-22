@@ -1,11 +1,12 @@
 require_relative "piece"
 
 class King < Piece
-  attr_accessor :times_moved
+  attr_accessor :times_moved, :symbol
 
   def initialize(row, col, color)
     super(row, col, color)
     @times_moved = 0
+    @symbol = "K"
   end
 
   def possible_moves(board)

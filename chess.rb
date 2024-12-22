@@ -21,7 +21,7 @@ class Chess
       "knight", 
       "rook"
     ]
-
+   
     @black_pawns = []
     @white_pawns = []
 
@@ -54,43 +54,14 @@ class Chess
 
   def render_cell(row, col)
     space_contents = @board[row][col]
-    print "_" if space_contents.nil?
-    print "K".colorize(:white) if 
-      space_contents.is_a?(King) && 
-      space_contents.color == "white"
-    print "Q".colorize(:white) if 
-      space_contents.is_a?(Queen) && 
-      space_contents.color == "white"
-    print "B".colorize(:white) if 
-      space_contents.is_a?(Bishop) && 
-      space_contents.color == "white"
-    print "N".colorize(:white) if 
-      space_contents.is_a?(Knight) && 
-      space_contents.color == "white"
-    print "R".colorize(:white) if 
-      space_contents.is_a?(Rook) && 
-      space_contents.color == "white"
-    print "P".colorize(:white) if 
-      space_contents.is_a?(Pawn) && 
-      space_contents.color == "white"
-    print "K".colorize(:black) if 
-      space_contents.is_a?(King) && 
-      space_contents.color == "black"
-    print "Q".colorize(:black) if 
-      space_contents.is_a?(Queen) && 
-      space_contents.color == "black"
-    print "B".colorize(:black) if 
-      space_contents.is_a?(Bishop) && 
-      space_contents.color == "black"
-    print "N".colorize(:black) if 
-      space_contents.is_a?(Knight) && 
-      space_contents.color == "black"
-    print "R".colorize(:black) if 
-      space_contents.is_a?(Rook) && 
-      space_contents.color == "black"
-    print "P".colorize(:black) if 
-      space_contents.is_a?(Pawn) && 
-      space_contents.color == "black"
+    if space_contents.nil?
+      print "_" 
+    else
+      print space_contents.symbol.colorize(:white) if 
+        space_contents.color == "white"
+      print space_contents.symbol.colorize(:black) if 
+        space_contents.color == "black"
+    end
   end
 
   def print_board

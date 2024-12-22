@@ -1,12 +1,13 @@
 require_relative "piece"
 
 class Pawn < Piece
-  attr_accessor :en_passant_eligible, :times_moved
+  attr_accessor :en_passant_eligible, :times_moved, :symbol
 
   def initialize(row, col, color, times_moved = 0)
     super(row, col, color)
     @times_moved = times_moved
     @en_passant_eligible = false
+    @symbol = "P"
   end
 
   def possible_moves(board)

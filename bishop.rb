@@ -1,8 +1,11 @@
 require_relative "piece"
 
 class Bishop < Piece
+  attr_accessor :symbol
+  
   def initialize(row, col, color)
     super(row, col, color)
+    @symbol = "B"
   end
 
   def possible_moves(board)
